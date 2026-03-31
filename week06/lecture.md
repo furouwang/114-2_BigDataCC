@@ -449,6 +449,172 @@ ls -la /home/shared_project
 
 ---
 
+## 第六部分：WSL 指令練習
+
+### 6.1 什麼是 WSL？
+
+WSL（Windows Subsystem for Linux）讓你在 Windows 上直接跑 Linux，不需要另外開虛擬機或連線到遠端伺服器。你這學期用的 Linux 環境就是 WSL。
+
+```
+┌─────────────────────────────────────┐
+│           Windows 11                │
+│                                     │
+│  ┌──────────┐    ┌───────────────┐  │
+│  │ 檔案總管  │    │ WSL (Ubuntu)  │  │
+│  │ VS Code  │◄──►│ bash 終端機   │  │
+│  │ Chrome   │    │ Linux 指令    │  │
+│  └──────────┘    └───────────────┘  │
+│       ▲                 ▲           │
+│       │    檔案互通      │           │
+│       └────────────────┘           │
+└─────────────────────────────────────┘
+```
+
+WSL 的重點：
+- Windows 和 Linux **同時運作**在同一台電腦上
+- 兩邊的檔案可以**互相存取**
+- 從 Windows 可以用 `wsl` 指令操作 Linux
+- 從 Linux 可以透過 `/mnt/c/` 存取 Windows 的 C 槽
+
+### 6.2 WSL 管理指令（在 Windows 終端機或 PowerShell 執行）
+
+以下指令在 **Windows 的 PowerShell 或 CMD** 中執行，不是在 WSL 裡面：
+
+```powershell
+# 查看已安裝的 Linux 發行版
+wsl --list --verbose
+
+# 查看 WSL 版本資訊
+wsl --version
+
+# 查看目前 WSL 狀態
+wsl --status
+```
+
+#### 輸出範例
+
+```
+$ wsl --list --verbose
+  NAME      STATE           VERSION
+* Ubuntu    Running         2
+```
+
+| 欄位 | 說明 |
+|------|------|
+| NAME | 安裝的 Linux 發行版名稱 |
+| STATE | 狀態：Running（執行中）或 Stopped（已停止） |
+| VERSION | WSL 版本（1 或 2，目前主流是 WSL 2） |
+| `*` 星號 | 預設的發行版 |
+
+#### 其他常用管理指令
+
+| 指令 | 功能 | 使用時機 |
+|------|------|---------|
+| `wsl --shutdown` | 關閉所有 WSL 執行個體 | WSL 卡住或想釋放記憶體時 |
+| `wsl -d Ubuntu` | 啟動指定的發行版 | 有多個發行版時選擇啟動哪一個 |
+| `wsl --update` | 更新 WSL 核心 | 系統提示需要更新時 |
+
+### 6.3 檔案系統互通
+
+WSL 最實用的功能之一是 Windows 和 Linux 之間可以互相存取檔案。
+
+#### 方向 1：從 Linux 存取 Windows 檔案
+
+Windows 的 C 槽掛載在 WSL 的 `/mnt/c/`：
+
+```bash
+# 在 WSL 中查看 Windows 桌面的檔案
+ls /mnt/c/Users/你的Windows帳號/Desktop/
+
+# 在 WSL 中讀取 Windows 的文字檔
+cat /mnt/c/Users/你的Windows帳號/Documents/notes.txt
+
+# 路徑對照
+# Windows: C:\Users\小明\Desktop\report.txt
+# WSL:     /mnt/c/Users/小明/Desktop/report.txt
+```
+
+**路徑轉換規則**：
+
+| Windows 路徑 | WSL 路徑 |
+|---|---|
+| `C:\` | `/mnt/c/` |
+| `D:\` | `/mnt/d/` |
+| `C:\Users\小明\Desktop` | `/mnt/c/Users/小明/Desktop` |
+
+注意：反斜線 `\` 變成正斜線 `/`，磁碟機代號變成 `/mnt/` 下的小寫字母。
+
+#### 方向 2：從 Windows 存取 WSL 檔案
+
+在 Windows 的檔案總管網址列輸入：
+
+```
+\\wsl$\Ubuntu\home\你的Linux帳號
+```
+
+或者在 WSL 中用指令打開檔案總管：
+
+```bash
+# 用 Windows 檔案總管打開目前目錄
+explorer.exe .
+
+# 用 Windows 檔案總管打開家目錄
+explorer.exe ~
+```
+
+### 6.4 在 WSL 中執行 Windows 程式
+
+WSL 可以直接呼叫 Windows 的程式（.exe）：
+
+```bash
+# 在 WSL 中打開 Windows 記事本
+notepad.exe
+
+# 用記事本打開 Linux 中的檔案
+notepad.exe ~/hello.txt
+
+# 用 VS Code 打開目前目錄
+code .
+
+# 查看 Windows 的 IP 設定
+ipconfig.exe
+```
+
+### 6.5 實用小技巧
+
+#### 快速進入 WSL
+
+在 Windows 的任何資料夾中，按住 Shift 點右鍵，選擇「在此處開啟 Linux shell」。
+
+或者在檔案總管的網址列輸入 `wsl`，直接在該目錄開啟 WSL。
+
+#### Windows Terminal 分頁切換
+
+Windows Terminal 可以同時開多個分頁：
+- 一個分頁跑 PowerShell（Windows）
+- 另一個分頁跑 Ubuntu（WSL）
+- 用 `Ctrl+Shift+1/2/3` 快速開新分頁
+
+### 6.6 課堂練習：WSL 檔案互通
+
+```bash
+# 練習 1：在 WSL 中查看 Windows 桌面有什麼檔案
+ls /mnt/c/Users/$(cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r')/Desktop/
+
+# 練習 2：在 WSL 建立檔案，從 Windows 打開
+echo "Hello from WSL!" > ~/wsl_test.txt
+notepad.exe ~/wsl_test.txt
+
+# 練習 3：在 WSL 中建立檔案到 Windows 桌面
+echo "This file was created from WSL" > /mnt/c/Users/$(cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r')/Desktop/from_wsl.txt
+# 回到 Windows 桌面看看有沒有出現 from_wsl.txt
+
+# 練習 4：用 explorer.exe 打開 WSL 的家目錄
+explorer.exe ~
+```
+
+---
+
 ## 本週重點回顧
 
 1. `whoami` 查看帳號名、`id` 查看 UID/GID/群組、`groups` 查看所屬群組
@@ -460,3 +626,5 @@ ls -la /home/shared_project
 7. `chown` 改擁有者、`chgrp` 改群組，兩者都需要 sudo
 8. `chown` 改的是「誰擁有」，`chmod` 改的是「能做什麼」
 9. 多人協作用群組管理存取權限，不要用 777
+10. WSL 讓 Windows 和 Linux 共存，`/mnt/c/` 存取 Windows 檔案，`\\wsl$\` 存取 WSL 檔案
+11. WSL 中可以執行 Windows 程式（`notepad.exe`、`explorer.exe`、`code`）

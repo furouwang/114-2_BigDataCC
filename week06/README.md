@@ -5,7 +5,7 @@
 | 項目 | 說明 |
 |------|------|
 | 對應教科書 | 3-3 使用者與群組管理、3-4 目錄結構 |
-| 繳交方式 | 在 Fork 的 week06/ 資料夾中建立三個檔案，發 PR 繳交 |
+| 繳交方式 | 在 Fork 的 week06/ 資料夾中建立四個檔案，發 PR 繳交 |
 | 繳交期限 | 下週上課前 |
 | PR 標題格式 | 學號_姓名_week06 |
 | 本週另有 | 教師審查專題提案 |
@@ -223,11 +223,73 @@ A3：
 
 ---
 
+## 第 4 題：WSL 操作實作（20 分）
+
+完成以下 WSL 操作，將結果存入 `week06/q4_wsl.txt`：
+
+```
+姓名：
+學號：
+
+=== 任務 1：查看 WSL 環境資訊 ===
+請在 Windows 的 PowerShell 或 CMD 中執行以下指令，貼上結果：
+
+wsl --list --verbose
+（貼上結果）
+
+wsl --version
+（貼上結果）
+
+請回答：你的 WSL 版本是多少？安裝的 Linux 發行版叫什麼名稱？
+
+=== 任務 2：檔案互通 — 從 WSL 存取 Windows ===
+以下操作在 WSL 終端機中執行：
+
+步驟 1：查看 Windows 桌面的檔案
+ls /mnt/c/Users/你的Windows帳號/Desktop/ | head -10
+（貼上結果，只需列前 10 個）
+
+步驟 2：查看 Windows 和 WSL 的路徑對應
+請將你自己 Windows 桌面的路徑，用兩種格式寫出來：
+Windows 路徑：（例如 C:\Users\小明\Desktop）
+WSL 路徑：（例如 /mnt/c/Users/小明/Desktop）
+
+=== 任務 3：檔案互通 — 從 WSL 建立檔案到 Windows ===
+
+步驟 1：在 WSL 中建立一個檔案到 Windows 桌面
+echo "我的學號是 你的學號，這個檔案從 WSL 建立" > /mnt/c/Users/你的Windows帳號/Desktop/wsl_hello.txt
+（貼上指令，若無輸出表示成功）
+
+步驟 2：在 WSL 中確認檔案已建立
+cat /mnt/c/Users/你的Windows帳號/Desktop/wsl_hello.txt
+（貼上結果）
+
+步驟 3：從 WSL 打開 Windows 檔案總管查看家目錄
+explorer.exe ~
+（截圖或描述你看到了什麼）
+
+步驟 4：清理 — 刪除桌面上的測試檔案
+rm /mnt/c/Users/你的Windows帳號/Desktop/wsl_hello.txt
+（貼上指令）
+```
+
+### 評分標準
+
+| 項目 | 配分 |
+|------|------|
+| 檔案存在且格式正確 | 3 分 |
+| 任務 1 WSL 環境資訊正確並回答問題 | 5 分 |
+| 任務 2 成功列出 Windows 桌面檔案並寫出路徑對應 | 5 分 |
+| 任務 3 成功從 WSL 建立檔案到 Windows 並驗證 | 7 分 |
+
+---
+
 ## 繳交 Checklist
 
 - [ ] week06/q1_users.txt 包含身份查詢、passwd 解讀、建立使用者群組的完整結果
 - [ ] week06/q2_ownership.txt 包含目錄結構說明、空間統計、chown/chgrp 操作結果
 - [ ] week06/q3_concepts.txt 包含三題觀念回答
+- [ ] week06/q4_wsl.txt 包含 WSL 環境資訊和檔案互通操作結果
 - [ ] 已 push 到自己的 Fork
 - [ ] 已發 PR，標題格式：學號_姓名_week06
 
@@ -262,3 +324,15 @@ cat /etc/group | grep week06group
 # 如果存在，刪除
 sudo groupdel week06group
 ```
+
+**Q：Q4 不知道自己的 Windows 帳號名稱？**
+在 WSL 中執行：`cmd.exe /c "echo %USERNAME%" 2>/dev/null`，顯示的就是你的 Windows 帳號。或者直接在 Windows 的檔案總管網址列看 `C:\Users\` 下你的資料夾名稱。
+
+**Q：`wsl --list --verbose` 沒有輸出？**
+確認你是在 Windows 的 PowerShell 或 CMD 執行，不是在 WSL 裡面。WSL 裡面不能執行 `wsl --list`。
+
+**Q：`/mnt/c/` 底下什麼都沒有？**
+確認 WSL 已正確掛載 Windows 磁碟。執行 `ls /mnt/` 看看有哪些磁碟。如果沒有 c，嘗試重新啟動 WSL：在 Windows 中執行 `wsl --shutdown`，然後重新開啟。
+
+**Q：`explorer.exe .` 無法開啟？**
+確認指令中有加 `.exe`（WSL 中呼叫 Windows 程式必須加副檔名）。如果仍然失敗，可以跳過這步，手動在 Windows 檔案總管輸入 `\\wsl$\Ubuntu\home\你的帳號` 來存取。
