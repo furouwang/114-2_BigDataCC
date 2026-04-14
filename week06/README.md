@@ -5,9 +5,9 @@
 | 項目 | 說明 |
 |------|------|
 | 對應教科書 | 3-3 使用者與群組管理、3-4 目錄結構 |
-| 繳交方式 | 在 Fork 的 week06/ 資料夾中建立四個檔案，發 PR 繳交 |
+| 繳交方式 | 在 Fork 的 week06/ 資料夾中建立四個檔案，push 到 Fork |
 | 繳交期限 | 下週上課前 |
-| PR 標題格式 | 學號_姓名_week06 |
+| PR 標題 | 學號_姓名（僅首次繳交時建立，之後 push 自動更新） |
 | 本週另有 | 教師審查專題提案 |
 
 ---
@@ -24,7 +24,7 @@
    git commit -m "完成第6週作業"
    git push origin main
    ```
-6. 到 GitHub 網頁發 PR，標題：`學號_姓名_week06`
+6. push 到你的 Fork 即可（W3 已建立的 PR 會自動更新）
 
 ---
 
@@ -255,8 +255,7 @@ rm /mnt/c/Users/你的Windows帳號/Desktop/wsl_hello.txt
 - [ ] week06/q2_ownership.txt 包含目錄結構說明、空間統計、chown/chgrp 操作結果
 - [ ] week06/q3_concepts.txt 包含三題觀念回答
 - [ ] week06/q4_wsl.txt 包含 WSL 環境資訊和檔案互通操作結果
-- [ ] 已 push 到自己的 Fork
-- [ ] 已發 PR，標題格式：學號_姓名_week06
+- [ ] 已 push 到 Fork（確認 PR 中可看到本週 commit）
 
 ---
 
@@ -301,3 +300,19 @@ sudo groupdel week06group
 
 **Q：`explorer.exe .` 無法開啟？**
 確認指令中有加 `.exe`（WSL 中呼叫 Windows 程式必須加副檔名）。如果仍然失敗，可以跳過這步，手動在 Windows 檔案總管輸入 `\\wsl$\Ubuntu\home\你的帳號` 來存取。
+
+---
+
+## 🚀 進階挑戰（選做）
+
+> 覺得本週內容太簡單？試試這題，不計分但歡迎挑戰。
+
+**建立一個多使用者共享環境**
+
+1. 建立 2 個使用者（`dev1`、`dev2`）和 1 個群組（`project`）
+2. 建立 `/home/shared/` 共享資料夾
+3. 設定權限：只有 `project` 群組的成員能讀寫，其他人完全不能存取
+4. 用 `dev1` 建立一個檔案，切換到 `dev2` 確認能讀寫
+5. 建立一個不在群組內的 `dev3`，確認無法存取
+
+提示：`chmod 770`、`chgrp`、`setfacl`（進階可用 ACL 做更細緻的控制）

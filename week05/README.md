@@ -5,9 +5,9 @@
 | 項目 | 說明 |
 |------|------|
 | 對應教科書 | 3-2 使用 nano 文字編輯器 |
-| 繳交方式 | 在 Fork 的 week05/ 資料夾中建立三個檔案，發 PR 繳交 |
+| 繳交方式 | 在 Fork 的 week05/ 資料夾中建立三個檔案，push 到 Fork |
 | 繳交期限 | 下週上課前 |
-| PR 標題格式 | 學號_姓名_week05 |
+| PR 標題 | 學號_姓名（僅首次繳交時建立，之後 push 自動更新） |
 | 本週另有 | 組內討論投票決定專題題目、繳交專題提案 |
 
 ---
@@ -24,7 +24,7 @@
    git commit -m "完成第5週作業"
    git push origin main
    ```
-6. 到 GitHub 網頁發 PR，標題：`學號_姓名_week05`
+6. push 到你的 Fork 即可（W3 已建立的 PR 會自動更新）
 
 ---
 
@@ -139,8 +139,7 @@ A3：
 - [ ] week05/q1_nano.txt 包含 nano 操作過程和快捷鍵
 - [ ] week05/q2_script.txt 包含 Script 程式碼、權限設定、執行結果
 - [ ] week05/q3_chmod.txt 包含三題觀念回答
-- [ ] 已 push 到自己的 Fork
-- [ ] 已發 PR，標題格式：學號_姓名_week05
+- [ ] 已 push 到 Fork（確認 PR 中可看到本週 commit）
 - [ ] 各組已在專題 Repo 繳交 proposal/proposal.md
 
 ---
@@ -158,3 +157,18 @@ A3：
 
 **Q：專題提案不知道怎麼寫？**
 參考專題 Repo 中 `proposal/proposal.md` 的模板，依照欄位填寫即可。
+
+---
+
+## 🚀 進階挑戰（選做）
+
+> 覺得本週內容太簡單？試試這題，不計分但歡迎挑戰。
+
+**寫一個 crontab 排程：每天自動備份指定資料夾並壓縮成 .tar.gz**
+
+1. 寫一個 `backup.sh` 腳本，把指定資料夾壓縮成 `backup_YYYY-MM-DD.tar.gz`
+2. 用 `date +%Y-%m-%d` 自動產生日期命名
+3. 設定 crontab，每天凌晨 2:00 自動執行備份
+4. 加入保留最近 7 天備份的清理邏輯（`find ... -mtime +7 -delete`）
+
+提示：`crontab -e` 編輯排程，格式為 `分 時 日 月 週 指令`
